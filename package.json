@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/TheAlmightyMight/Node-JS-playground/issues"
   },
-  "homepage": "https://github.com/TheAlmightyMight/Node-JS-playground#readme"
+  "homepage": "https://github.com/TheAlmightyMight/Node-JS-playground#readme",
+  "dependencies": {
+    "node-fetch": "^3.2.10"
+  }
 }
