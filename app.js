@@ -1,33 +1,36 @@
-const http = require("http");
-const server = http.Server();
+const https = require("https");
 
-const agent = new http.Agent({ keepAlive: true });
+const url = new URL("https://jsonplaceholder.typicode.com/todos/1");
+console.log(url.protocol);
 
-server.on("connection", () => {
-  console.log("Connection...");
-});
+// const req = https.request(
+//   {
+//     hostname: "jsonplaceholder.typicode.com",
+//     port: 443,
+//     path: "/todos/1",
+//     method: "GET",
+//   },
+//   (res) => {
+//     console.log(`STATUS: ${res.statusCode}`);
+//     console.log(res.headers);
+//     res.setEncoding("utf8");
 
-server.on("request", (req, res) => {
-  res.writeHead(200, {
-    ["Connection"]: "Keep-Alive",
-    "Keep-Alive": "timeout=5, max=1000",
-  });
-  res.write("Hello there!");
-  res.end();
-});
+//     res.on("data", (chunk) => {
+//       console.log(`Received a chunk of data ${chunk}`);
+//     });
 
-server.listen(5000, () => console.log("Listening"));
+//     res.on("error", (err) => {
+//       console.error(err.message);
+//     });
 
-// const net = require("node:net");
-// const server = net.Server();
-// const port = 5000;
+//     res.on("end", () => {
+//       console.log("Request finished");
+//     });
+//   }
+// );
 
-// server.listen(port, "localhost", () => {
-//   console.log(`Listens on ${port}`);
+// req.on("error", (e) => {
+//   console.error(e);
 // });
 
-// server.on("connection", () => {
-//   console.log("Connected to someone");
-// });
-
-// server.on("connect")
+// req.end();
