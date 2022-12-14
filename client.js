@@ -17,7 +17,7 @@ ws.on("close", (code, reason) => {
 ws.on("open", () => {
   console.log("Opened ws connection");
   try {
-    ws.send("Hello my neeegggga", err => {
+    ws.send("Hi server", err => {
       if (err) {
         throw err;
       }
