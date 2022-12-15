@@ -1,12 +1,11 @@
 import { WebSocketServer } from "ws";
 import * as dotenv from "dotenv";
-import fs from "fs/promises";
 dotenv.config();
 
 process.on("uncaughtException", err => {
   console.error(
     "An error occurred \n",
-    "------------------------------------------------------------------------------------------------------------------------------------------------------------ \n",
+    "------------------------------------------------------------------------------- \n",
     `Name: ${err.name} \n`,
     `Message: ${err.message} \n`,
     `Stack: ${err.stack} \n`,
@@ -17,15 +16,22 @@ process.on("uncaughtException", err => {
 
 const server = new WebSocketServer({ port: process.env.PORT });
 
+const messages = [];
+
 server.on("connection", (ws, req) => {
   ws.on("open", () => {
     console.log("Websocket has opened...");
   });
 
-  ws.on("message", async data => {
+  ws.on("message", data => {
     console.log(`Data received: ${data.toString()}`);
-    await fs.writeFile("files/data.txt", data, { encoding: "ascii" });
-    ws.close();
+    messages.push(data.toString());
+
+    server.clients.forEach((el, i) => {
+      if (el.readyState === ws.OPEN) {
+        el.send(JSON.stringify({ message: messages }), { binary: false });
+      }
+    });
   });
 
   ws.on("error", err => {
@@ -43,14 +49,14 @@ server.on("connection", (ws, req) => {
     res.write("Unexpected response");
   });
 
+  ws.on("close", () => {
+    console.log("Closed a connection");
+  });
+
   // Can be used for auth
   // ws.on("upgrade", (req) => {
 
   // });
-
-  ws.on("close", () => {
-    console.log("Closed a connection");
-  });
 });
 
 server.on("close", () => {
@@ -68,7 +74,3 @@ server.on("error", err => {
 server.on("listening", () => {
   console.warn(`Server is now listening to port ${process.env.PORT}`);
 });
-
-// server.on("headers", (headers, req) => {
-//
-// });
